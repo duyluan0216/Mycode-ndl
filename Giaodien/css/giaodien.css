@@ -1,0 +1,16 @@
+/* CSS Document */
+.link a{
+	color: blue;
+	text-decoration: none;
+	transition: width 2s,height 2s,transform 2s;
+	-webkit-transition: width 2s,height 2s,transform 2s;
+}
+.link a:hover{
+	color: #B22DFF;
+	text-decoration: none;
+	transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+}
+.gianchu{
+	line-height: 10px;
+}
