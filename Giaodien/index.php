@@ -40,6 +40,9 @@
 </head>
 
 <body>
+	<?php
+		include("config.php");
+	 ?>
 	<section class="wrapper bounceIn">
 		<header>
 			<div class="container-fluid">
@@ -53,8 +56,8 @@
 								<a class="navbar-brand float-right" href="index.php">AiMuZic</a>
 							</div>
 							<div class="col-lg-10">
-								<div class="collapse navbar-collapse" id="menu_chinh">
-									<ul class="navbar nav nv-pills">
+								<div class="collapse navbar-collapse " id="menu_chinh">
+									<ul class="navbar nav nv-pills float-right">
 										<li class="nav-item"><a class="nav-link" href="#" title="Xếp hạng">Xếp Hạng</a></li>
 										  <li class="nav-item dropdown">
 											<a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">Bài hát</a>
@@ -72,20 +75,6 @@
 										  </li>
 										<li class="nav-item dropdown">
 											<a class="nav-link " href="#" role="button" aria-haspopup="true" aria-expanded="false">Ca sĩ</a>
-											<div class="dropdown-content">
-											  	<a class="dropdown-item" href="#">Việt Nam</a>
-												<div class="dropdown-divider"></div>
-											  	<a class="dropdown-item" href="#">Âu Mỹ</a>
-												<div class="dropdown-divider"></div>
-											  	<a class="dropdown-item" href="#">Hàn Quốc</a>
-												<div class="dropdown-divider"></div>
-											  	<a class="dropdown-item" href="#">Nhật Bản</a>
-												<div class="dropdown-divider"></div>
-												<a class="dropdown-item" href="#">Khác</a>
-											</div>
-										  </li>
-										<li class="nav-item dropdown">
-											<a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">Album</a>
 											<div class="dropdown-content">
 											  	<a class="dropdown-item" href="#">Việt Nam</a>
 												<div class="dropdown-divider"></div>
@@ -139,10 +128,12 @@
 										</li>";
 												}
 										?>
-										<li class="nav-item"><a href="#" class="nav-link" title="Upload"><i class="fas fa-cloud-upload-alt" style="color:black; width: 30px; height: 30px;"></i></a></li>
+										<?php if(isset($_SESSION['username'])) { ?>
+										<li class="nav-item"><a href="update.php" class="nav-link" title="Upload"><i class="fas fa-cloud-upload-alt" style="color:black; width: 30px; height: 30px;"></i></a></li>
+									<?php } ?>
 									</ul>
-									<form class="form-inline ml-2">
-										<input class="form-control" type="search" placeholder="Nhập tên bài hát, ca sĩ, album,..." style="width: 250px;">
+									<form class="form-inline ml-5">
+										<input class="form-control" type="search" placeholder="Nhập tên bài hát, ca sĩ, album,..." style="width: 300px;">
 										<button type="submit" class="btn btn-info"><i class="fas fa-search fa-1x"></i></button>
 									</form>
 								</div>
@@ -247,19 +238,28 @@
 								</li>
 							</ul>
 							<div class="tab-content" id="content-tab">
-								<div class="tab-pane fade show active" id="vietnam" role="tabpanel">bảng xếp hạng việt nam ở đây<br>
-								bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây này<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
-									bảng xếp hạng việt nam ở đây<br>
+								<div class="tab-pane fade show active" id="vietnam" role="tabpanel">
+									 <div class="list-group list-group-flush mt-4">
+									<?php 
+										$sql="SELECT*FROM baihatmoi ORDER BY luotview DESC LIMIT 10";
+										$query=mysqli_query($connect,$sql);
+										$stt=0;
+										while($data = mysqli_fetch_array($query)){
+											$stt++;
+									 ?>
+									 <div class="text-danger"><?php echo $stt.". "; ?></div>
+									  <a class="list-group-item" href="player.php?id=<?php echo $data['id']; ?>">
+									  	<div class="media float-left">
+										  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
+										  <div class="media-body" style="line-height: 11px; font-size: 13px;">
+											<p style="font-weight: bold;"><?php echo $data['tenbaihat']." - (".$data['luotview']." Lượt nghe)"; ?></p>
+											<?php echo $data['casy']; ?>
+										  </div>
+										</div>
+										<div class="clearfix"></div>
+									  </a>
+									<?php } ?>
+									</div>
 								</div>
 								<div class="tab-pane fade show" id="aumy" role="tabpanel">Bảng xếp hạng âu mỹ ở đây</div>
 								<div class="tab-pane fade show" id="hanquoc" role="tabpanel">bảng xếp hạng hàn quốc ở đây</div>
@@ -326,7 +326,7 @@
 							</figure>
 							</div>
 							<div class="carousel-item">
-							  							<figure class="figure mr-3">
+							  <figure class="figure mr-3">
 								<a href="#">
 									<img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" style="width: 165px; height: 165px;" class="img-thumbnail">
 									<figcaption class="figure-caption">Album A</figcaption>
@@ -368,56 +368,23 @@
 						<div class="float-left link" style="font-weight: bold;font-size: 20px;"><a href="#">Bài Hát Mới ></a></div>
 						<div class="clearfix"></div>
 							  <div class="list-group list-group-flush mt-4">
-								  <a class="list-group-item" href="#">
+							  	<?php 
+							  		$sql = "SELECT*FROM baihatmoi LIMIT 6";
+							  		$query = mysqli_query($connect,$sql);
+							  		while ($data = mysqli_fetch_array($query)) {
+							  		   
+							  	 ?>
+								  <a class="list-group-item" href="player.php?id=<?php echo $data['id'];?>">
 								  	<div class="media float-left">
 									  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
 									  <div class="media-body" style="line-height: 11px; font-size: 13px;">
-										<p style="font-weight: bold;">Bài Hát A</p>
-										Ca Sĩ A
+										<p style="font-weight: bold;"><?php echo $data['tenbaihat']; ?></p>
+										<?php echo $data['casy']; ?>
 									  </div>
 									</div>
 									<div class="clearfix"></div>
 								  </a>
-								  <a class="list-group-item" href="#">
-								  	<div class="media float-left">
-									  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
-									  <div class="media-body" style="line-height: 11px; font-size: 13px;">
-										<p style="font-weight: bold;">Bài Hát A</p>
-										Ca Sĩ A
-									  </div>
-									</div>
-									<div class="clearfix"></div>
-								  </a>
-								  <a class="list-group-item" href="#">
-								  	<div class="media float-left">
-									  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
-									  <div class="media-body" style="line-height: 11px; font-size: 13px;">
-										<p style="font-weight: bold;">Bài Hát A</p>
-										Ca Sĩ A
-									  </div>
-									</div>
-									<div class="clearfix"></div>
-								  </a>
-								  <a class="list-group-item" href="#">
-								  	<div class="media float-left">
-									  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
-									  <div class="media-body" style="line-height: 11px; font-size: 13px;">
-										<p style="font-weight: bold;">Bài Hát A</p>
-										Ca Sĩ A
-									  </div>
-									</div>
-									<div class="clearfix"></div>
-								  </a>
-								  <a class="list-group-item " href="#">
-								  	<div class="media float-left">
-									  <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
-									  <div class="media-body" style="line-height: 11px; font-size: 13px;">
-										<p style="font-weight: bold;">Bài Hát A</p>
-										Ca Sĩ A
-									  </div>
-									</div>
-
-								  </a>
+								<?php } ?>
 							</div>
 					</div>
 				  <div class="col-lg-4 mt-2">

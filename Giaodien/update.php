@@ -1,32 +1,20 @@
 <?php
     session_start();
 ?>
-<?php
-        include("config.php");
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $sql = "SELECT*FROM baihatmoi WHERE id=$id";
-            $query = mysqli_query($connect,$sql);
-            $data=mysqli_fetch_array($query);
-            $luotview = $data['luotview'];
-            $luotview++;
-            $sql1 = "UPDATE baihatmoi SET luotview = '$luotview' WHERE id='$id'";
-            mysqli_query($connect,$sql1);
-        }
-?>
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title><?php echo $data['tenbaihat'] ." - ". $data['casy']; ?></title>
+<title>Upload nhạc</title>
 <link rel="stylesheet" href="css/animate.css" type="text/css">
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<script defer src="js/all.js"></script>
 <link href="css/all.css" rel="stylesheet">
 <link href="css/giaodien.css" type="text/css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="css/player.css">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link type="text/css" rel="stylesheet" href="css/golden-forms.css"/>
+<link type="text/css" rel="stylesheet" href="css/font-awesome.min.css"/>
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'> 
+<script defer src="js/all.js"></script>
 <style>
     .dropdown{
         position: relative;
@@ -49,6 +37,48 @@
 </head>
 
 <body>
+	<?php
+        include ("config.php");
+        $tenbaihat="";
+        $tencasy="";
+        $theloai="";
+        $ketqua="";
+        $duongdan="";
+		if (isset($_POST['button_huy'])) {
+			header("Location:index.php");
+		}elseif (isset($_POST['button_them'])) {
+            $tenbaihat=$_POST['tenbaihat'];
+            $tencasy=$_POST['tencasy'];
+            $theloai=$_POST['theloai'];
+            $nhac = $_FILES['f_nhac'];
+            $name=$nhac['name'];
+            $type =$nhac['type'];
+            $error =$nhac['error'];
+            if (($type=='audio/x-m4a' || $type=='audio/mp3' || $type=='audio/ogg') && $error == 0) {
+                if ($_SESSION['username']=='ndl1602') {
+                    $duongdan = "nhac/$name";
+                }else {
+                    $duongdan = "upload_nhac/$name";
+                }
+                $result = move_uploaded_file($nhac['tmp_name'], "$duongdan");
+                if ($result==true) {
+                    if ($_SESSION['username']=='ndl1602') {
+                        $sql = "INSERT INTO baihat(tenbaihat,casy,theloai,duongdan) VALUES ('$tenbaihat','$tencasy','$theloai','$duongdan')";
+                    }else {
+                        $sql = "INSERT INTO baihatmoi(tenbaihat,casy,theloai,duongdan) VALUES ('$tenbaihat','$tencasy','$theloai','$duongdan')";
+                    }
+                    mysqli_query($connect,$sql);
+                    $ketqua = "Upload thành công";
+                }
+                else {
+                    $ketqua = "Có lỗi trong quá trình thực hiện vui lòng thử lại";
+                }
+            }
+            else {
+                $ketqua = "Định dạng file không đúng phải là đuôi .mp4, .mp3, .ogg, xin mời nhập lại";
+            }
+        }
+	 ?>
     <section class="wrapper bounceIn">
         <header>
             <div class="container-fluid">
@@ -170,155 +200,97 @@
     <section>
         <div class="container border shadow-lg px-5 pb-5" style="margin-top: 90px;">
             <div class="row mt-3">
-                <div class="col-lg-8">
-                    <div class="gianchu">
-                        <div class="media mb-3">
-                          <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" alt="album" width="200px" height="175px">
-                          <div class="media-body">
-                            <h5 class="mt-0 text-primary"><?php echo $data['tenbaihat']; ?></h5>
-                            <p><b>Ca sĩ:</b> <?php echo $data['casy']; ?></p>
-                            <p><b>Sáng tác:</b></p>
-                            <p><b>Album:</b></p>
-                            <p><b>Năm phát hành:</b></p>
-                          </div>
-                    </div>
-                    </div>
-                <!-- partial:index.partial.html -->
-                <!-- Called of font style  file -->
+                <div class="col-lg-12">
+                    <form name="addnhac" action="" method="post" enctype="multipart/form-data">
+                        <div class="gforms spaced">    
+                          <div class="golden-forms wrapper">
+                            
+                            <div class="form-title">
+                                <h2>Upload Nhạc</h2>
+                            </div>
 
-                <link href='https://fonts.googleapis.com/css?family=Allerta' rel='stylesheet'>
-                    <div class="container-audio">
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                        <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                         <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                         <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                         <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                         <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                         <div class="colum1">
-                            <div class="row"></div>
-                        </div>
-                    </div>
-                    <div class="container-audio">
-                        <audio controls  loop autoplay>
-                                   <source src="<?php echo $data['duongdan']; ?>" type="audio/mp3">
-                               </audio>
-                    </div>
-                        <div class="mt-4">
-                            <ul class="nav nav-pills bg-light rounded float-left" id="bxh" role="tablist">
-                                <li class="nav-item mr-3">
-                                    <a class="nav-link active" id="download-tab" data-toggle="tab" href="#download" role="tab" style="font-weight: bold;">Download</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="lyric-tab" data-toggle="tab" href="#lyric" role="tab" style="font-weight: bold;">Lyric</a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                            <div class="tab-content" id="content-tab">
-                                <div class="tab-pane fade show active" id="download" role="tabpanel">Tải nhạc ở đây
-                                </div>
-                                <div class="tab-pane fade show" id="lyric" role="tabpanel">Lời bài hát ở đây</div>
-                            </div>
-                        </div>
-                <!-- partial -->
-                </div>
-                <div class="col-lg-4">
-                        <div class="float-right text-danger" style="font-weight: bold;">Bảng xếp hạng</div>
-                        <div class="clearfix"></div>
-                        <div class="mt-2 mx-auto">
-                            <ul class="nav nav-tabs bg-light justify-content-center rounded" id="bxh" role="tablist">
-                                <li class="nav-item float-left">
-                                    <a class="nav-link active" id="vietnam-tab" data-toggle="tab" href="#vietnam" role="tab" style="font-weight: bold;">Việt Nam</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="aumy-tab" data-toggle="tab" href="#aumy" role="tab" style="font-weight: bold;">Âu Mỹ</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="hanquoc-tab" data-toggle="tab" href="#hanquoc" role="tab" style="font-weight: bold;">Hàn Quốc</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content mt-3" id="content-tab">
-                                <div class="tab-pane fade show active" id="vietnam" role="tabpanel">
-                                     <div class="list-group list-group-flush mt-4">
-                                    <?php 
-                                        $sql="SELECT*FROM baihatmoi ORDER BY luotview DESC LIMIT 10";
-                                        $query=mysqli_query($connect,$sql);
-                                        $stt=0;
-                                        while($data = mysqli_fetch_array($query)){
-                                            $stt++;
-                                     ?>
-                                     <div class="text-danger"><?php echo $stt."."; ?></div>
-                                      <a class="list-group-item" href="player.php?id=<?php echo $data['id']; ?>">
-                                        <div class="media float-left">
-                                          <img src="images/FILE-20170901-1420WDJFDVM6D8KL.jpg" class="mr-3" style="width: 40px; height: 40px;">
-                                          <div class="media-body" style="line-height: 11px; font-size: 13px;">
-                                            <p style="font-weight: bold;"><?php echo $data['tenbaihat']." - (".$data['luotview']." Lượt nghe)"; ?></p>
-                                            <?php echo $data['casy']; ?>
+                             <div class="form-enclose">
+                                  <div class="form-section">
+                                
+                                <section>
+                                  <div class="row">
+                                          <div class="col3 first">
+                                                          <label for="tenbaihat" class="lbl-text tleft">Tên bài hát:</label>
                                           </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                      </a>
-                                    <?php } ?>
-                                    </div>
+                                         <div class="col6 last">
+                                                         <label class="lbl-ui append-icon">
+                                                                    <input type="text" name="tenbaihat" class="input" value="<?php echo $tenbaihat ?>" required title="Vui lòng nhập vào tên bài át" />
+                                                                    <b class="tooltip left-top"><em> Tên bài hát </em></b>
+                                                                    <span><i class="fas fa-music"></i></span>
+                                                         </label>
+                                         </div>
+                               </div> <!--kết thúc row-->                            
+                               </section> 
+                               <section>
+                                  <div class="row">
+                                          <div class="col3 first">
+                                                          <label for="tensp" class="lbl-text tleft">Tên ca sỹ:</label>
+                                          </div>
+                                         <div class="col6 last">
+                                                         <label class="lbl-ui append-icon">
+                                                                    <input type="text" name="tencasy" class="input" value="<?php echo $tencasy ?>" required title="Vui lòng nhập vào tên ca sỹ" />
+                                                                    <b class="tooltip left-top"><em> Tên ca sỹ </em></b>
+                                                                    <span><i class="far fa-user"></i></span>
+                                                         </label>
+                                         </div>
+                               </div> <!--kết thúc row-->                            
+                               </section> 
+                               <section>
+                                  <div class="row">
+                                          <div class="col3 first">
+                                                          <label for="theloai" class="lbl-text tleft">Thể loại:</label>
+                                          </div>
+                                         <div class="col6 last">
+                                                         <label class="lbl-ui append-icon">
+                                                                    <input type="text" name="theloai" class="input" value="<?php echo $theloai ?>" required title="Vui lòng nhập vào thể loại bài hát" />
+                                                                    <b class="tooltip left-top"><em> Thể loại bài hát </em></b>
+                                                                    <span><i class="fas fa-music"></i></span>
+                                                         </label>
+                                         </div>
+                               </div> <!--kết thúc row-->                            
+                               </section> 
+                               <section>
+                                  <div class="row">
+                                          <div class="col3 first">
+                                                          <label for="file_nhac" class="lbl-text tleft">File Nhạc:</label>
+                                          </div>
+                                         <div class="col6 last">
+                                                         <label class="lbl-ui file-input">
+                                                             <span class="button blue">
+                                                                <input type="file" name="f_nhac" onChange="this.parentNode.nextSibling.value=this.value" />Chọn nhạc
+                                                             </span><input type="text" placeholder="Chưa chọn nhạc" readonly class="input">
+                                                         </label>
+                                         </div>
+                               </div> <!--kết thúc row-->                            
+                               </section>
+                               <?php if ($ketqua!="") { ?>
+                               <section>
+                                   <p align="center" class="notification <?php if($ketqua=='Upload thành công') echo "success"; else echo "error"; ?> ">
+                                       <?php echo $ketqua; ?>
+                                   </p>
+                               </section>
+                                <?php } ?>
+                               <section> 
+                                   <p align="center">
+                                       <input name="button_them" type="submit" class="button blue" value="Thêm"/>
+                                       <input name="button_huy" type="submit" class="button red" value="Hủy"/>
+                                  </p>
+                              </section>                
+                                
+                                
                                 </div>
-                                <div class="tab-pane fade show" id="aumy" role="tabpanel">Bảng xếp hạng âu mỹ ở đây</div>
-                                <div class="tab-pane fade show" id="hanquoc" role="tabpanel">bảng xếp hạng hàn quốc ở đây</div>
+                              </div>
+                            
+                            
                             </div>
-                        </div>
-                    </div>
+                          </div>
+                        </form>        
+                </div>
             </div>
         </div>
         <footer>
